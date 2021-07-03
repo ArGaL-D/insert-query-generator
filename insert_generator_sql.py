@@ -11,14 +11,14 @@ def get_options_selected(fields):
 
     for field in fields:
         os.system('clear')
-        print("# generate IDs       -> (1)")
-        print("# generate Numbers   -> (2)")
-        print("# generate Names     -> (3)")
-        print("# generate Surnames  -> (4)")
-        print("# generate Products  -> (5)")
-        print("# generate Prices    -> (6)")
-        print("# generate Countries -> (7)")
-        print("# random characters  -> (8)")
+        print("# generate IDs       -> (1)\t # generate            -> ( 9)")
+        print("# generate Numbers   -> (2)\t # generate Email      -> (10)")
+        print("# generate Names     -> (3)\t # generate            -> (11)")
+        print("# generate Surnames  -> (4)\t # generate            -> (12)")
+        print("# generate Products  -> (5)\t # generate            -> (13)")
+        print("# generate Prices    -> (6)\t # generate            -> (14)")
+        print("# generate Countries -> (7)\t # generate            -> (15)")
+        print("# random characters  -> (8)\t # generate Phone num. -> (16)")
 
         repeat_loop = True
 
@@ -29,7 +29,7 @@ def get_options_selected(fields):
             if option.isnumeric():
                 number = int(option)            
                 
-                if number >= 1 and number <=8:
+                if number >= 1 and number <=16:
                     option_selected.append(number)
                     repeat_loop = False                             
                 else:
@@ -43,7 +43,7 @@ def generate_field_values(options_selected, id):
     values = []
     for option in options_selected:
         if option == 1:
-            values.append(id)
+            values.append(id+1)
 
         elif option == 2:
             values.append(random.randint(0,1000000))
@@ -81,7 +81,7 @@ def generate_field_values(options_selected, id):
             values.append(round(random.uniform(0,10000),2))
 
         elif option == 7:
-                            # JSON File
+            # JSON File
             file = open('./json/countries.json',)
             countries = json.load(file)
 
@@ -89,6 +89,23 @@ def generate_field_values(options_selected, id):
             values.append(add_quotes)
             
             file.close()
+        elif option == 10:
+            # JSON File
+            file = open('./json/names.json',)
+            names = json.load(file)
+
+            domain = ['hotmail','gmail','yahoo','prof','kolie','banc','outlook','bira','light']
+            val    = ['com','mx','es','ko','us','ch','ag','rd','xyz']
+
+            add_quotes = f"'{names[random.randint(0, len(names)-1)]}@{domain[random.randint(0,len(domain)-1)]}.{val[random.randint(0,len(val)-1)]}'".lower()
+            values.append(add_quotes)
+
+            file.close()
+
+        elif option == 16:
+
+            add_quotes = f"{int(random.random()*10000000000)}"
+            values.append(add_quotes)
 
         else:
             characters  = ['0','1','2','4','5','6','7','8','9','A','B',
@@ -118,6 +135,7 @@ def main ():
         
         if num_of_inserts.isnumeric():        
             
+            db_name    = input("\n# Database (Name)\n  -> ")
             table_name = input("\n# Table name (DB)\n  -> ")
             fields_db  = input("\n# Type the fields\n  -> ")
             list_of_fields = fields_db.split()
@@ -129,6 +147,8 @@ def main ():
             # Create a SQL file
             sqlFile = open(f"{table_name}.sql","w+")
 
+
+            sqlFile.write(f"USE {db_name};\n")
 
             for i in trange (int(num_of_inserts)):                                                            
                 values = generate_field_values(list_options,i)
