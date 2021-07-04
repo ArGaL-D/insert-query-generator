@@ -11,7 +11,7 @@ def get_options_selected(fields):
 
     for field in fields:
         os.system('clear')
-        print("# generate IDs       -> (1)\t # generate            -> ( 9)")
+        print("# generate IDs       -> (1)\t # generate Currency   -> ( 9)")
         print("# generate Numbers   -> (2)\t # generate Email      -> (10)")
         print("# generate Names     -> (3)\t # generate            -> (11)")
         print("# generate Surnames  -> (4)\t # generate            -> (12)")
@@ -89,6 +89,19 @@ def generate_field_values(options_selected, id):
             values.append(add_quotes)
             
             file.close()
+
+        elif option == 9:
+            # JSON File
+            file = open('./json/currency.json',)
+            currency = json.load(file)
+
+            randNum = random.randint(0, len(currency)-1)
+            add_quotes = f"'({currency[randNum]['currency']}) {currency[randNum]['name']}'"
+            values.append(add_quotes)
+            
+            file.close()
+
+
         elif option == 10:
             # JSON File
             file = open('./json/names.json',)
@@ -161,7 +174,7 @@ def main ():
                 time.sleep(0.00001)
 
             sqlFile.close
-            print(f"\n[+] The '{table_name}.sql' file has been created\n")                
+            print(f"\n[+] The '{table_name.lower()}.sql' file has been created\n")                
             break
         else:
             print(chr(27)+"[3;31m","\n Please, enter a number",chr(27)+"[0m")
