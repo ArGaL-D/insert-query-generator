@@ -1,4 +1,5 @@
 from tqdm import tqdm, trange
+import datetime
 import time
 import os
 import random
@@ -7,48 +8,77 @@ import json
 
 def get_options_selected(fields):
     
-    option_selected = []
+    options_selected = []
+    
+    options = [
+                "Id...........", "Numbers......", 
+                "Names........", "Surnames.....", 
+                "Products.....", "Prices.......", 
+                "Countries....", "Text-Char250.",
+                "Currency.....", "Emails.......", 
+                "Date.........", "Phone number."                
+              ]
+    
+    options.sort()
 
+
+    # Columnas de tabla
     for field in fields:
         os.system('clear')
-        print("# generate IDs       -> (1)\t # generate Currency   -> ( 9)")
-        print("# generate Numbers   -> (2)\t # generate Email      -> (10)")
-        print("# generate Names     -> (3)\t # generate            -> (11)")
-        print("# generate Surnames  -> (4)\t # generate            -> (12)")
-        print("# generate Products  -> (5)\t # generate            -> (13)")
-        print("# generate Prices    -> (6)\t # generate            -> (14)")
-        print("# generate Countries -> (7)\t # generate            -> (15)")
-        print("# random characters  -> (8)\t # generate Phone num. -> (16)")
+
+        total_options = len(options)
+        min_value = int (total_options / 2)
+        max_value = total_options - min_value
+
+        # Mostrar lista de opciones
+        print("\n Select an option...\n")      
+          
+        if total_options % 2 == 0:
+            for index in range(max_value):
+                if min_value <= total_options - 1:
+                    print(f" [+] {options[index]} ({index})\t [+] {options[min_value]} ({min_value})")
+
+                min_value += 1
+        else:
+            for index in range(max_value):
+                min_value += 1
+                if min_value <= total_options - 1:
+                    print(f" [+] {options[index]} ({index})\t [+] {options[min_value]} ({min_value})")
+                else:    
+                    print(f" [+] {options[index]} ({index})")
 
         repeat_loop = True
 
+        # Validar opcion seleccionada
         while repeat_loop:
-            print(chr(27)+"[5;32m","\n  ->" + chr(27)+"[0m" + " Select an option...\n")
-            option = input("  VALUE of ["+field+"] -> ")
+            print(chr(27)+"[5;32m","\n  ->" + chr(27)+"[0m", end="")
+            option = input("  Field - ["+field+"] ")            
 
             if option.isnumeric():
                 number = int(option)            
                 
-                if number >= 1 and number <=16:
-                    option_selected.append(number)
+                if number >= 0 and number < len(options):
+                    options_selected.append(number)
                     repeat_loop = False                             
                 else:
                     print(chr(27)+"[3;32m","\n  ->",chr(27)+"[0m"+ f"Option ({option}) does not exist")                                
     
-    return option_selected
+    return [options_selected, options]
 
 
+# Genera los valores (VALUES) por cada sentencia INSERT 
 
-def generate_field_values(options_selected, id):
+def generate_field_values(options_selected, options, id):
     values = []
-    for option in options_selected:
-        if option == 1:
+
+    for index in options_selected:
+        if  options[index].find("Id") > -1:
             values.append(id+1)
 
-        elif option == 2:
+        elif options[index].find("Numbers") > -1:
             values.append(random.randint(0,1000000))
 
-        elif option == 3:
+        elif options[index].find("Names") > -1:
             # JSON File
             file = open('./json/names.json',)
             names = json.load(file)
@@ -57,7 +87,7 @@ def generate_field_values(options_selected, id):
             values.append(add_quotes)
             
             file.close()
-        elif option == 4:
+        elif options[index].find("Surnames") > -1:
             # JSON File
             file = open('./json/names.json',)
             surnames = json.load(file)
@@ -67,7 +97,7 @@ def generate_field_values(options_selected, id):
             
             file.close()
 
-        elif option == 5:
+        elif options[index].find("Products") > -1:
             # JSON File
             file = open('./json/products.json',)
             products = json.load(file)
@@ -77,10 +107,10 @@ def generate_field_values(options_selected, id):
             
             file.close()
 
-        elif option == 6:
+        elif options[index].find("Prices") > -1:
             values.append(round(random.uniform(0,10000),2))
 
-        elif option == 7:
+        elif options[index].find("Countries") > -1:
             # JSON File
             file = open('./json/countries.json',)
             countries = json.load(file)
@@ -90,7 +120,7 @@ def generate_field_values(options_selected, id):
             
             file.close()
 
-        elif option == 9:
+        elif options[index].find("Currency") > -1:
             # JSON File
             file = open('./json/currency.json',)
             currency = json.load(file)
@@ -102,7 +132,7 @@ def generate_field_values(options_selected, id):
             file.close()
 
 
-        elif option == 10:
+        elif options[index].find("Email") > -1:
             # JSON File
             file = open('./json/names.json',)
             names = json.load(file)
@@ -115,30 +145,32 @@ def generate_field_values(options_selected, id):
 
             file.close()
 
-        elif option == 16:
-
+        elif options[index].find("Phone") > -1:
             add_quotes = f"{int(random.random()*10000000000)}"
             values.append(add_quotes)
 
-        else:
-            characters  = ['0','1','2','4','5','6','7','8','9','A','B',
-                        'C','D','E','F','G','H','I','J','K','L','M',
-                        'N','O','P','Q','R','S','T','U','V','W','X',
-                        'Y','Z','a','b','c','d','e','f','g','h','i',
-                        'j','k','l','m','n','o','p','q','r','s','t',
-                        'u','v','w','x','y','z','!','#','|','%',')',
-                        '(','&','¡','$','?','[','¿','=','-','+','_']
+        elif options[index].find("Text") > -1:
+            text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In et euismod massa. Fusce tincidunt orci ut accumsan mollis. Ut tincidunt egestas nisl. In ut efficitur metus. Integer venenatis libero eget dignissim maximus. Nullam et pellentesque massa al."
 
-            random_num = random.randint(1,20)
-            char_list  = []
+            add_quotes = f"'{text}'"
+            values.append(add_quotes)
 
-            for number in range (random_num):                    
-                char_list.append(characters[random.randint(0,len(characters)-1)])
+        elif options[index].find("Date") > -1:
+            current_date = datetime.date.today()
+            current_year = int ('{:02d}'.format(current_date.year))
 
-            result_list = "".join(map(str,char_list))
-            add_quotes = f"'{result_list}'"
-            values.append(add_quotes)  
-    
+            year  = random.randint(2000,current_year)
+            month = random.randint(1,12)
+            day   = random.randint(1,30)
+
+            if month == 2:
+                day = random.randint(1,28)
+            
+            date = datetime.date(year,month,day)
+
+            add_quotes = f"'{date}'"
+            values.append(add_quotes)
+
     return values
 
 
@@ -148,25 +180,26 @@ def main ():
         
         if num_of_inserts.isnumeric():        
             
-            db_name    = input("\n# Database (Name)\n  -> ")
-            table_name = input("\n# Table name (DB)\n  -> ")
-            fields_db  = input("\n# Type the fields\n  -> ")
-            list_of_fields = fields_db.split()
+            db_name    = input("\n# Database Name\n  -> ")
+            table_name = input("\n# Table name\n  -> ")
+            fields_db  = input("\n# Enter the fields\n  -> ")            
+            list_of_fields = fields_db.split() # guarda nombre de columnas de tabla de DB
                     
-            list_options = get_options_selected(list_of_fields)   
+            # Mostrar lista de opciones y obtener opciones selecionadas (numeros)                 
+            options_selected, options_list = get_options_selected(list_of_fields)
 
             print("\n")
             
-            # Create a SQL file
+            # Crear archivo SQL y agregar el nombre de la BD
             sqlFile = open(f"{table_name}.sql","w+")
-
-
             sqlFile.write(f"USE {db_name};\n")
 
+            # Total de sentencias 'INSERT' a generar
             for i in trange (int(num_of_inserts)):                                                            
-                values = generate_field_values(list_options,i)
+                values = generate_field_values(options_selected, options_list, i)
 
-                fields =  ",".join(map(str,list_of_fields))
+                # Convertir listas en String y separarlas por comas
+                fields =  ",".join(map(str,list_of_fields)) 
                 field_values =  ",".join(map(str,values))
 
                 #print("INSERT INTO",table_name,"("+fields+") VALUES ("+field_values+");")                
@@ -174,7 +207,8 @@ def main ():
                 time.sleep(0.00001)
 
             sqlFile.close
-            print(f"\n[+] The '{table_name.lower()}.sql' file has been created\n")                
+            print(f"\n[+] The '{table_name.lower()}.sql' file has been created\n")
+
             break
         else:
             print(chr(27)+"[3;31m","\n Please, enter a number",chr(27)+"[0m")
