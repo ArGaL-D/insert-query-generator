@@ -213,5 +213,7 @@ def main ():
         else:
             print(chr(27)+"[3;31m","\n Please, enter a number",chr(27)+"[0m")
             
-
-main()
+try:
+    main()
+except KeyboardInterrupt:
+    print("\n [-] The process has been interrupted :( ")
