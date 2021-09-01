@@ -52,7 +52,7 @@ def get_options_selected(fields):
         # Validar opcion seleccionada
         while repeat_loop:
             print(chr(27)+"[5;32m","\n  ->" + chr(27)+"[0m", end="")
-            option = input("  Field - ["+field+"] ")            
+            option = input("  Field ["+field+"] ")            
 
             if option.isnumeric():
                 number = int(option)            
@@ -103,8 +103,8 @@ def generate_field_values(options_selected, options, id):
             products = json.load(file)
 
             add_quotes = f"'{products[random.randint(0, len(products)-1)]['name']}'"
+          
             values.append(add_quotes)
-            
             file.close()
 
         elif options[index].find("Prices") > -1:
