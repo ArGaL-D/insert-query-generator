@@ -5,7 +5,6 @@ import os
 import random
 import json
 
-
 def get_options_selected(fields):
     
     options_selected = []
