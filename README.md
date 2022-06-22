@@ -1,7 +1,7 @@
 # insert-query-generator
 
 Hi,
-You can generate a lot of random inserts and save them in a sql file and add it to your database for testing purposes.
+You can generate a lot of random inserts and save them in a sql file and add them to your database for testing purposes.
 
 
 Hola,
